@@ -27,10 +27,12 @@ TerminalVelocity = 40.0
 HikerCamera = NodePath("../VCam")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
 shape = SubResource("CylinderShape3D_71nwn")
 
 [node name="CSGCylinder3D" type="CSGCylinder3D" parent="CharacterBody3D"]
 process_mode = 4
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
 radius = 0.25
 height = 1.6
 

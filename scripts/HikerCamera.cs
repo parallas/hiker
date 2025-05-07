@@ -1,5 +1,6 @@
 using Godot;
 using Hiker.CamSystem;
+using Parallas;
 
 namespace Hiker;
 
@@ -28,7 +29,12 @@ public partial class HikerCamera : VirtualCamera
         HandleInputs(delta);
 
         UpdateRotation();
-        GlobalPosition = TargetPosition + GlobalTransform.Basis.Z * TargetDistance;
+
+        float distanceRing = TargetDistance;
+        float amount = MathUtil.Clamp01(-GlobalTransform.Basis.Z.Y);
+        distanceRing *= Mathf.Lerp(1f, 0.1f, amount);
+
+        GlobalPosition = TargetPosition + GlobalTransform.Basis.Z * distanceRing;
     }
 
     public override void _Input(InputEvent inputEvent)
@@ -60,7 +66,7 @@ public partial class HikerCamera : VirtualCamera
 
     private void UpdateRotation()
     {
-        _rotationValues.Y = Mathf.Clamp(_rotationValues.Y, -80f, 80f);
+        _rotationValues.Y = Mathf.Clamp(_rotationValues.Y, -65f, 65f);
         GlobalRotation = GlobalRotation with { X = Mathf.DegToRad(_rotationValues.Y), Y = Mathf.DegToRad(_rotationValues.X) };
     }
 }

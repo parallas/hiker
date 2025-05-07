@@ -54,7 +54,6 @@ public partial class Player : CharacterBody3D
         if(IsOnFloor())
         {
             var degAngle = Mathf.RadToDeg(GetFloorAngle());
-
             if(jumpInput)
             {
                 VerticalVelocity = Vector3.Up * jumpVel;
@@ -62,8 +61,6 @@ public partial class Player : CharacterBody3D
             }
             else if(degAngle > 50)
             {
-                targetPlanarVel *= 0.2f;
-
                 steepTimer -= delta;
                 if(steepTimer <= 0)
                 {
@@ -73,8 +70,7 @@ public partial class Player : CharacterBody3D
             else if(degAngle > 45)
             {
                 steepTimer = 3;
-                targetPlanarVel *= 0.4f;
-                FloorMaxAngle = 59;
+                FloorMaxAngle = 80;
             }
             else
             {

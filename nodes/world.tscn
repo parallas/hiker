@@ -1,6 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://cedc7epg28vbg"]
+[gd_scene load_steps=5 format=3 uid="uid://cedc7epg28vbg"]
 
+[ext_resource type="Script" uid="uid://cu81gji1tk28p" path="res://scripts/cam_system/SmartCamera.cs" id="1_1lur1"]
 [ext_resource type="Script" uid="uid://b0ex226bdtyea" path="res://scripts/Player.cs" id="1_71nwn"]
+[ext_resource type="Script" uid="uid://bmbomfyyxlk36" path="res://scripts/HikerCamera.cs" id="3_vwthc"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_71nwn"]
 height = 1.6
@@ -8,7 +10,11 @@ radius = 0.25
 
 [node name="world" type="Node3D"]
 
-[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.880519, 0.474011, 0, -0.474011, 0.880519, 0.010253, 3.87215, 3.42794)
+script = ExtResource("1_1lur1")
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="." node_paths=PackedStringArray("Camera")]
 physics_interpolation_mode = 1
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.010253, 1.8, 0.000672102)
 disable_mode = 1
@@ -18,6 +24,7 @@ floor_max_angle = 1.39626
 script = ExtResource("1_71nwn")
 GravitySpeed = -20.0
 TerminalVelocity = 40.0
+Camera = NodePath("../Camera3D")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
 shape = SubResource("CylinderShape3D_71nwn")
@@ -30,8 +37,9 @@ height = 1.6
 [node name="camera_holder" type="Node3D" parent="CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 0.880519, 0.474011, 0, -0.474011, 0.880519, 0, 0, 0)
 
-[node name="Camera3D" type="Camera3D" parent="CharacterBody3D/camera_holder"]
+[node name="VCam" type="Node3D" parent="CharacterBody3D/camera_holder"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 4)
+script = ExtResource("3_vwthc")
 
 [node name="CSGCombiner3D" type="CSGCombiner3D" parent="."]
 use_collision = true

@@ -14,38 +14,83 @@ public partial class Player : CharacterBody3D
 
     private bool jumpInput;
 
+    private float jumpVel;
+    private Vector3 motionVel;
+    private Vector2 inputDir;
+
+    private double steepTimer = 3;
+
     public override void _Ready()
     {
         SetPhysicsProcess(true);
+
+        jumpVel = Mathf.Sqrt(2 * Math.Abs(GravitySpeed) * 0.6f);
+    }
+
+    public override void _Process(double delta)
+    {
+        base._Process(delta);
+
+        inputDir = Input.GetVector("move_left", "move_right", "move_forward", "move_backward");
+
+        if(Input.IsActionJustPressed("jump"))
+        {
+            jumpInput = true;
+        }
     }
 
     public override void _PhysicsProcess(double delta)
     {
         base._PhysicsProcess(delta);
 
-        // Velocity += Vector3.Up * GravitySpeed * (float)delta;
+        bool collided = MoveAndSlide();
 
-        // Velocity = Velocity.Clamp(-TerminalVelocity, TerminalVelocity);
+        Vector3 targetPlanarVel = 3 * new Vector3(inputDir.X, 0, inputDir.Y);
 
-        if(Velocity.LengthSquared() < TerminalVelocity * TerminalVelocity)
-        {
-            Velocity = MathUtil.Approach(
-                Velocity,
-                Vector3.Up * TerminalVelocity,
-                GravitySpeed * (float)delta
-            );
-        }
+        Vector3 PlanarVelocity = MathUtil.ProjectOnPlane(Velocity, UpDirection);
+        Vector3 VerticalVelocity = MathUtil.Project(Velocity, UpDirection);
+        VerticalVelocity = MathUtil.Approach(VerticalVelocity, -UpDirection * TerminalVelocity, -GravitySpeed * (float)delta);
 
         if(IsOnFloor())
         {
+            VerticalVelocity = Vector3.Zero;
+
+            var degAngle = Mathf.RadToDeg(GetFloorAngle());
+
             if(jumpInput)
             {
-                jumpInput = false;
-
-                Velocity = Velocity with { Y = 8 };
+                VerticalVelocity = Vector3.Up * jumpVel;
+                steepTimer = 0;
             }
+            else if(degAngle > 50)
+            {
+                targetPlanarVel *= 0.2f;
+
+                steepTimer -= delta;
+                if(steepTimer <= 0)
+                {
+                    FloorMaxAngle = 0;
+                }
+            }
+            else if(degAngle > 45)
+            {
+                steepTimer = 3;
+                targetPlanarVel *= 0.4f;
+                FloorMaxAngle = 59;
+            }
+            else
+            {
+                steepTimer = 3;
+                FloorMaxAngle = 80;
+            }
+
+            targetPlanarVel *= MathUtil.InverseLerp01(85, 45, degAngle);
         }
 
-        MoveAndSlide();
+        PlanarVelocity = MathUtil.Approach(PlanarVelocity, targetPlanarVel, 10 * (float)delta);
+
+        Velocity = PlanarVelocity + VerticalVelocity;
+
+        jumpInput = false;
     }
 }

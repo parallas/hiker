@@ -1,0 +1,46 @@
+[gd_scene load_steps=3 format=3 uid="uid://cedc7epg28vbg"]
+
+[ext_resource type="Script" uid="uid://b0ex226bdtyea" path="res://scripts/Player.cs" id="1_71nwn"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_71nwn"]
+height = 1.6
+radius = 0.25
+
+[node name="world" type="Node3D"]
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
+physics_interpolation_mode = 1
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+disable_mode = 1
+collision_layer = 5
+collision_mask = 3
+floor_max_angle = 0.698132
+script = ExtResource("1_71nwn")
+GravitySpeed = -9.81
+TerminalVelocity = 100.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
+shape = SubResource("CylinderShape3D_71nwn")
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="CharacterBody3D"]
+radius = 0.25
+height = 1.6
+
+[node name="camera_holder" type="Node3D" parent="CharacterBody3D"]
+
+[node name="Camera3D" type="Camera3D" parent="CharacterBody3D/camera_holder"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 4)
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="."]
+use_collision = true
+collision_layer = 3
+collision_mask = 0
+
+[node name="CSGBox3D" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+size = Vector3(17, 1, 17)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.424936, 0.741569, 0.519139, 0.403697, -0.668551, 0.624555, 0.810221, -0.0558206, -0.58346, 0, 5, 0)
+shadow_enabled = true
+directional_shadow_mode = 1

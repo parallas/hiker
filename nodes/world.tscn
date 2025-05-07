@@ -23,10 +23,12 @@ TerminalVelocity = 40.0
 shape = SubResource("CylinderShape3D_71nwn")
 
 [node name="CSGCylinder3D" type="CSGCylinder3D" parent="CharacterBody3D"]
+process_mode = 4
 radius = 0.25
 height = 1.6
 
 [node name="camera_holder" type="Node3D" parent="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 0.880519, 0.474011, 0, -0.474011, 0.880519, 0, 0, 0)
 
 [node name="Camera3D" type="Camera3D" parent="CharacterBody3D/camera_holder"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 4)
@@ -49,6 +51,6 @@ transform = Transform3D(0.896456, 0.443134, 0, -0.443134, 0.896456, 0, 0, 0, 1, 
 size = Vector3(5.44208, 4.05811, 1)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.424936, 0.741569, 0.519139, 0.403697, -0.668551, 0.624555, 0.810221, -0.0558206, -0.58346, 0, 5, 0)
+transform = Transform3D(-0.424936, -0.741569, -0.519139, 0.403697, -0.668551, 0.624555, -0.810221, 0.0558206, 0.583461, 0, 5, 0)
 shadow_enabled = true
 directional_shadow_mode = 1

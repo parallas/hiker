@@ -12,6 +12,9 @@ public partial class Player : CharacterBody3D
     [Export]
     public float TerminalVelocity { get; set; }
 
+    [Export]
+    public Camera3D Camera { get; set; }
+
     private bool jumpInput;
 
     private float jumpVel;
@@ -46,6 +49,7 @@ public partial class Player : CharacterBody3D
         bool collided = MoveAndSlide();
 
         Vector3 targetPlanarVel = 3 * new Vector3(inputDir.X, 0, inputDir.Y);
+        targetPlanarVel = targetPlanarVel.Rotated(UpDirection, Camera.GlobalRotation.Y);
 
         Vector3 PlanarVelocity = MathUtil.ProjectOnPlane(Velocity, UpDirection);
         Vector3 VerticalVelocity = MathUtil.Project(Velocity, UpDirection);

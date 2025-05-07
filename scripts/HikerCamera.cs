@@ -45,7 +45,7 @@ public partial class HikerCamera : VirtualCamera
 
         if (inputEvent is InputEventMouseMotion mouseEvent)
         {
-            _rotationValues += -mouseEvent.ScreenRelative * 0.05f;
+            _rotationValues += -mouseEvent.ScreenRelative * 0.1f;
             UpdateRotation();
         }
     }
@@ -61,7 +61,7 @@ public partial class HikerCamera : VirtualCamera
             "+look_pitch"
         );
 
-        _rotationValues += inputDir * (float)delta * 50f;
+        _rotationValues += inputDir * (float)delta * 80f;
     }
 
     private void UpdateRotation()

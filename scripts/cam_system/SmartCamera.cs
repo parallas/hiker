@@ -7,6 +7,14 @@ namespace Hiker.CamSystem;
 public partial class SmartCamera : Camera3D
 {
     public static readonly List<VirtualCamera> VirtualCameras = new List<VirtualCamera>();
+
+    public override void _Ready()
+    {
+        base._Ready();
+
+        ProcessPriority = 999999;
+    }
+
     public override void _Process(double delta)
     {
         base._Process(delta);

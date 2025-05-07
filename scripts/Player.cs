@@ -53,8 +53,6 @@ public partial class Player : CharacterBody3D
 
         if(IsOnFloor())
         {
-            VerticalVelocity = Vector3.Zero;
-
             var degAngle = Mathf.RadToDeg(GetFloorAngle());
 
             if(jumpInput)

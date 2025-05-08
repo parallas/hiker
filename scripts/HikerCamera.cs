@@ -15,13 +15,6 @@ public partial class HikerCamera : VirtualCamera
 
     private Vector2 _rotationValues = Vector2.Zero;
 
-    public override void _Ready()
-    {
-        base._Ready();
-
-        Input.SetMouseMode(Input.MouseModeEnum.Captured);
-    }
-
     public override void _Process(double delta)
     {
         base._Process(delta);

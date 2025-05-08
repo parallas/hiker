@@ -67,7 +67,7 @@ public partial class Player : CharacterBody3D
 
         if(IsOnFloor())
         {
-            HandleFloorSteepness(ref targetMoveSpeed, delta);
+            HandleFloorSteepness(delta);
             HandleJumpInput(ref verticalVelocity);
         }
 
@@ -78,7 +78,7 @@ public partial class Player : CharacterBody3D
         Velocity = planarVelocity + verticalVelocity;
     }
 
-    private void HandleFloorSteepness(ref float targetMoveSpeed, double delta)
+    private void HandleFloorSteepness(double delta)
     {
         var degAngle = Mathf.RadToDeg(GetFloorAngle());
         var floorSteepnessFactor = MathUtil.InverseLerp01(_maxSteepAngle, _minSteepAngle, degAngle);

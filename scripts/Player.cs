@@ -76,14 +76,16 @@ public partial class Player : CharacterBody3D
     private void HandleFloorSteepness(ref float targetMoveSpeed, double delta)
     {
         var degAngle = Mathf.RadToDeg(GetFloorAngle());
-        targetMoveSpeed *= MathUtil.InverseLerp01(85, 45, degAngle);
+        var floorSteepnessFactor = MathUtil.InverseLerp01(85, 50, degAngle);
+        targetMoveSpeed *= floorSteepnessFactor;
+        var countdownSpeed = Mathf.Lerp(1.5f, 0.25f, floorSteepnessFactor);
 
         if (degAngle > 50)
         {
-            _steepTimer -= delta;
+            _steepTimer -= delta * countdownSpeed;
             if (_steepTimer <= 0)
             {
-                FloorMaxAngle = 0;
+                FloorMaxAngle = Mathf.DegToRad(50);
             }
             return;
         }

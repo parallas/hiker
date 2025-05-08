@@ -194,7 +194,6 @@ public partial class Player : CharacterBody3D
             out var floorBelowResult
         );
         if (!hitBelow) return false;
-        GD.Print((Vector3)floorBelowResult["normal"]);
         if (IsSurfaceTooSteep((Vector3)floorBelowResult["normal"], Mathf.DegToRad(_maxStepAngle))) return false;
 
         GlobalPosition = stepPosWithClearance.Origin + downCheckResult.GetTravel();

@@ -54,51 +54,51 @@ public partial class Player : CharacterBody3D
 
         bool collided = MoveAndSlide();
 
-        Vector3 targetPlanarVel = 3 * new Vector3(_inputDir.X, 0, _inputDir.Y);
-        targetPlanarVel = targetPlanarVel.Rotated(UpDirection, _mainCamera.GlobalRotation.Y);
+        float targetMoveSpeed = 3f;
 
         Vector3 planarVelocity = MathUtil.ProjectOnPlane(Velocity, UpDirection);
         Vector3 verticalVelocity = MathUtil.Project(Velocity, UpDirection);
         verticalVelocity = MathUtil.Approach(verticalVelocity, -UpDirection * TerminalVelocity, -GravitySpeed * (float)delta);
 
-        if(IsOnFloor() && Mathf.RadToDeg(GetFloorAngle()) < 80)
+        if(IsOnFloor())
         {
-            var degAngle = Mathf.RadToDeg(GetFloorAngle());
-            if(_jumpInput)
-            {
-                verticalVelocity = Vector3.Up * _jumpVel;
-                _steepTimer = 0;
-            }
-            else if(degAngle > 50)
-            {
-                _steepTimer -= delta;
-                if(_steepTimer <= 0)
-                {
-                    FloorMaxAngle = 0;
-                }
-            }
-            else if(degAngle > 45)
-            {
-                _steepTimer = 3;
-                FloorMaxAngle = Mathf.DegToRad(80);
-            }
-            else
-            {
-                _steepTimer = 3;
-                FloorMaxAngle = Mathf.DegToRad(80);
-            }
-
-            targetPlanarVel *= MathUtil.InverseLerp01(85, 45, degAngle);
-        }
-        else if(IsOnFloor())
-        {
-            FloorMaxAngle = Mathf.DegToRad(30);
+            HandleFloorSteepness(ref targetMoveSpeed, delta);
+            HandleJumpInput(ref verticalVelocity);
         }
 
+        Vector3 targetPlanarVel = targetMoveSpeed * new Vector3(_inputDir.X, 0, _inputDir.Y);
+        targetPlanarVel = targetPlanarVel.Rotated(UpDirection, _mainCamera.GlobalRotation.Y);
         planarVelocity = MathUtil.Approach(planarVelocity, targetPlanarVel, 10 * (float)delta);
 
         Velocity = planarVelocity + verticalVelocity;
+    }
 
+    private void HandleFloorSteepness(ref float targetMoveSpeed, double delta)
+    {
+        var degAngle = Mathf.RadToDeg(GetFloorAngle());
+        targetMoveSpeed *= MathUtil.InverseLerp01(85, 45, degAngle);
+
+        if (degAngle > 50)
+        {
+            _steepTimer -= delta;
+            if (_steepTimer <= 0)
+            {
+                FloorMaxAngle = 0;
+            }
+            return;
+        }
+
+        _steepTimer = 3;
+        FloorMaxAngle = Mathf.DegToRad(80);
+    }
+
+    private void HandleJumpInput(ref Vector3  verticalVelocity)
+    {
+        if(_jumpInput)
+        {
+            verticalVelocity = Vector3.Up * _jumpVel;
+            _steepTimer = 0;
+        }
         _jumpInput = false;
     }
 }

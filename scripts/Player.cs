@@ -53,7 +53,12 @@ public partial class Player : CharacterBody3D
     {
         base._Process(delta);
 
-        _inputDir = Input.GetVector("move_left", "move_right", "move_forward", "move_backward");
+        _inputDir = Input.GetVector(
+            "move_left",
+            "move_right",
+            "move_forward",
+            "move_backward"
+        ).Clamp(-1f, 1f);
 
         if(Input.IsActionJustPressed("jump"))
         {
@@ -90,7 +95,7 @@ public partial class Player : CharacterBody3D
 
         Vector3 targetPlanarVel = targetMoveSpeed * new Vector3(_inputDir.X, 0, _inputDir.Y);
         targetPlanarVel = targetPlanarVel.Rotated(UpDirection, _mainCamera.GlobalRotation.Y);
-        planarVelocity = MathUtil.Approach(planarVelocity, targetPlanarVel, 10 * (float)delta);
+        planarVelocity = MathUtil.ExpDecay(planarVelocity, targetPlanarVel, 10f, (float)delta);
 
         Velocity = planarVelocity + verticalVelocity;
     }

@@ -25,6 +25,9 @@ public partial class Player : CharacterBody3D
 
     private double _steepTimer = 3;
 
+    private float _minSteepAngle = 45;
+    private float _maxSteepAngle = 75;
+
     public override void _Ready()
     {
         SetPhysicsProcess(true);
@@ -32,6 +35,8 @@ public partial class Player : CharacterBody3D
         _jumpVel = Mathf.Sqrt(2 * Math.Abs(GravitySpeed) * 0.6f);
 
         _mainCamera = GetViewport().GetCamera3D();
+
+        _maxSteepAngle = Mathf.RadToDeg(FloorMaxAngle);
     }
 
     public override void _Process(double delta)
@@ -76,22 +81,21 @@ public partial class Player : CharacterBody3D
     private void HandleFloorSteepness(ref float targetMoveSpeed, double delta)
     {
         var degAngle = Mathf.RadToDeg(GetFloorAngle());
-        var floorSteepnessFactor = MathUtil.InverseLerp01(85, 50, degAngle);
-        targetMoveSpeed *= floorSteepnessFactor;
+        var floorSteepnessFactor = MathUtil.InverseLerp01(_maxSteepAngle, _minSteepAngle, degAngle);
         var countdownSpeed = Mathf.Lerp(1.5f, 0.25f, floorSteepnessFactor);
 
-        if (degAngle > 50)
+        if (degAngle > _minSteepAngle)
         {
             _steepTimer -= delta * countdownSpeed;
             if (_steepTimer <= 0)
             {
-                FloorMaxAngle = Mathf.DegToRad(50);
+                FloorMaxAngle = Mathf.DegToRad(_minSteepAngle);
             }
             return;
         }
 
         _steepTimer = 3;
-        FloorMaxAngle = Mathf.DegToRad(80);
+        FloorMaxAngle = Mathf.DegToRad(_maxSteepAngle);
     }
 
     private void HandleJumpInput(ref Vector3  verticalVelocity)

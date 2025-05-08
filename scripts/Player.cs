@@ -57,16 +57,16 @@ public partial class Player : CharacterBody3D
         Vector3 targetPlanarVel = 3 * new Vector3(_inputDir.X, 0, _inputDir.Y);
         targetPlanarVel = targetPlanarVel.Rotated(UpDirection, _mainCamera.GlobalRotation.Y);
 
-        Vector3 PlanarVelocity = MathUtil.ProjectOnPlane(Velocity, UpDirection);
-        Vector3 VerticalVelocity = MathUtil.Project(Velocity, UpDirection);
-        VerticalVelocity = MathUtil.Approach(VerticalVelocity, -UpDirection * TerminalVelocity, -GravitySpeed * (float)delta);
+        Vector3 planarVelocity = MathUtil.ProjectOnPlane(Velocity, UpDirection);
+        Vector3 verticalVelocity = MathUtil.Project(Velocity, UpDirection);
+        verticalVelocity = MathUtil.Approach(verticalVelocity, -UpDirection * TerminalVelocity, -GravitySpeed * (float)delta);
 
         if(IsOnFloor() && Mathf.RadToDeg(GetFloorAngle()) < 80)
         {
             var degAngle = Mathf.RadToDeg(GetFloorAngle());
             if(_jumpInput)
             {
-                VerticalVelocity = Vector3.Up * _jumpVel;
+                verticalVelocity = Vector3.Up * _jumpVel;
                 _steepTimer = 0;
             }
             else if(degAngle > 50)
@@ -95,9 +95,9 @@ public partial class Player : CharacterBody3D
             FloorMaxAngle = Mathf.DegToRad(30);
         }
 
-        PlanarVelocity = MathUtil.Approach(PlanarVelocity, targetPlanarVel, 10 * (float)delta);
+        planarVelocity = MathUtil.Approach(planarVelocity, targetPlanarVel, 10 * (float)delta);
 
-        Velocity = PlanarVelocity + VerticalVelocity;
+        Velocity = planarVelocity + verticalVelocity;
 
         _jumpInput = false;
     }

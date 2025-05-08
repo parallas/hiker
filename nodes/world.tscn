@@ -1,10 +1,17 @@
-[gd_scene load_steps=5 format=3 uid="uid://cedc7epg28vbg"]
+[gd_scene load_steps=7 format=3 uid="uid://cedc7epg28vbg"]
 
 [ext_resource type="Script" uid="uid://cu81gji1tk28p" path="res://scripts/cam_system/SmartCamera.cs" id="1_1lur1"]
 [ext_resource type="Script" uid="uid://b0ex226bdtyea" path="res://scripts/Player.cs" id="1_71nwn"]
 [ext_resource type="Script" uid="uid://bmbomfyyxlk36" path="res://scripts/HikerCamera.cs" id="3_vwthc"]
 
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_71nwn"]
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1lur1"]
+radius = 0.25
+height = 1.6
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1lur1"]
+size = Vector3(0.5, 1.6, 0.5)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_1lur1"]
 height = 1.6
 radius = 0.25
 
@@ -14,7 +21,7 @@ radius = 0.25
 transform = Transform3D(1, 0, 0, 0, 0.880519, 0.474011, 0, -0.474011, 0.880519, 0.010253, 3.87215, 3.42794)
 script = ExtResource("1_1lur1")
 
-[node name="CharacterBody3D" type="CharacterBody3D" parent="." node_paths=PackedStringArray("HikerCamera")]
+[node name="CharacterBody3D" type="CharacterBody3D" parent="." node_paths=PackedStringArray("Collider", "HikerCamera")]
 physics_interpolation_mode = 1
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.010253, 1.8, 0.000672102)
 disable_mode = 1
@@ -22,13 +29,24 @@ collision_layer = 5
 collision_mask = 3
 floor_max_angle = 1.13446
 script = ExtResource("1_71nwn")
+Collider = NodePath("Capsule")
 GravitySpeed = -20.0
 TerminalVelocity = 40.0
 HikerCamera = NodePath("../VCam")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
+[node name="Capsule" type="CollisionShape3D" parent="CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
-shape = SubResource("CylinderShape3D_71nwn")
+shape = SubResource("CapsuleShape3D_1lur1")
+
+[node name="Box" type="CollisionShape3D" parent="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+shape = SubResource("BoxShape3D_1lur1")
+disabled = true
+
+[node name="Cylinder" type="CollisionShape3D" parent="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+shape = SubResource("CylinderShape3D_1lur1")
+disabled = true
 
 [node name="CSGCylinder3D" type="CSGCylinder3D" parent="CharacterBody3D"]
 process_mode = 4
@@ -64,6 +82,10 @@ size = Vector3(6.49529, 4.10834, 1)
 [node name="CSGBox3D5" type="CSGBox3D" parent="CSGCombiner3D"]
 transform = Transform3D(0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 0, 0, 1, -4.176, -1.638, -4)
 size = Vector3(6.49529, 7.37057, 1)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.558, 0.35, -3.691)
+size = Vector3(3, 0.7, 3)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.88326, -0.462755, 0.0755666, 0.403697, -0.668548, 0.624557, -0.238497, 0.582152, 0.777315, 0, 5, 0)

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Godot;
 using Godot.Collections;
@@ -87,15 +88,15 @@ public partial class Terrain : Node3D
         for (int y = 0; y < (Size.X - 1); y++)
         for (int x = 0; x < (Size.Y - 1); x++)
         {
-            int quad = y*Size.X + x;
+            int quad = y * Size.X + x;
 
             indices.Add(quad);
-            indices.Add(quad+Size.X);
-            indices.Add(quad+Size.X+1);
+            indices.Add(quad + Size.X);
+            indices.Add(quad + Size.X + 1);
 
             indices.Add(quad);
-            indices.Add(quad+Size.X+1);
-            indices.Add(quad+1);
+            indices.Add(quad + Size.X + 1);
+            indices.Add(quad + 1);
         }
 
         // Generate mesh data here
@@ -109,9 +110,11 @@ public partial class Terrain : Node3D
         mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, surfaceArray);
 
         var surfaceTool = new SurfaceTool();
-        surfaceTool.CreateFrom(mesh, 0);
+        surfaceTool.SetSmoothGroup(0);
+        surfaceTool.AppendFrom(mesh, 0, Transform3D.Identity);
         surfaceTool.GenerateNormals();
-        mesh = surfaceTool.Commit();
+        surfaceTool.GenerateTangents();
+        mesh = surfaceTool.Commit(mesh);
         MeshInstance3D.Mesh = mesh;
 
         var triMesh = mesh.CreateTrimeshShape();

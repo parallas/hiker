@@ -64,8 +64,6 @@ public partial class Player : CharacterBody3D
         {
             _jumpInput = true;
         }
-
-        HikerCamera.TargetPosition = GlobalPosition + Vector3.Up * 1.45f;
     }
 
     public override void _PhysicsProcess(double delta)
@@ -98,6 +96,8 @@ public partial class Player : CharacterBody3D
         planarVelocity = MathUtil.ExpDecay(planarVelocity, targetPlanarVel, 10f, (float)delta);
 
         Velocity = planarVelocity + verticalVelocity;
+
+        HikerCamera.TargetPosition = GlobalPosition + Vector3.Up * 1.45f;
     }
 
     private void HandleFloorSteepness(double delta)

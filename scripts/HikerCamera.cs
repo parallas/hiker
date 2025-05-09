@@ -15,19 +15,22 @@ public partial class HikerCamera : VirtualCamera
 
     private Vector2 _rotationValues = Vector2.Zero;
 
-    public override void _Process(double delta)
+    private Vector3 _rootPosition = Vector3.Zero;
+
+    public override void _PhysicsProcess(double delta)
     {
-        base._Process(delta);
+        base._PhysicsProcess(delta);
 
         HandleInputs(delta);
 
         UpdateRotation();
 
+        _rootPosition = MathUtil.ExpDecay(_rootPosition, TargetPosition, 10f, (float)delta);
+
         float distanceRing = TargetDistance;
         float amount = MathUtil.Clamp01(-GlobalTransform.Basis.Z.Y);
         distanceRing *= Mathf.Lerp(1f, 0.1f, amount);
-
-        GlobalPosition = TargetPosition + GlobalTransform.Basis.Z * distanceRing;
+        GlobalPosition = _rootPosition + GlobalTransform.Basis.Z * distanceRing;
     }
 
     public override void _Input(InputEvent inputEvent)
@@ -39,7 +42,6 @@ public partial class HikerCamera : VirtualCamera
         if (inputEvent is InputEventMouseMotion mouseEvent)
         {
             _rotationValues += -mouseEvent.ScreenRelative * 0.1f;
-            UpdateRotation();
         }
     }
 

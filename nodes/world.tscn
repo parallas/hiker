@@ -18,11 +18,15 @@ radius = 0.25
 [node name="world" type="Node3D"]
 
 [node name="Camera3D" type="Camera3D" parent="."]
+physics_interpolation_mode = 1
 transform = Transform3D(1, 0, 0, 0, 0.880519, 0.474011, 0, -0.474011, 0.880519, 0.010253, 3.87215, 3.42794)
 script = ExtResource("1_1lur1")
 
+[node name="VCam" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.880519, 0.474011, 0, -0.474011, 0.880519, 0.010253, 3.87215, 3.42795)
+script = ExtResource("3_vwthc")
+
 [node name="CharacterBody3D" type="CharacterBody3D" parent="." node_paths=PackedStringArray("Collider", "HikerCamera")]
-physics_interpolation_mode = 1
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.010253, 1.8, 0.000672102)
 disable_mode = 1
 collision_layer = 5
@@ -53,10 +57,6 @@ process_mode = 4
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
 radius = 0.25
 height = 1.6
-
-[node name="VCam" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.880519, 0.474011, 0, -0.474011, 0.880519, 0.010253, 3.87215, 3.42795)
-script = ExtResource("3_vwthc")
 
 [node name="CSGCombiner3D" type="CSGCombiner3D" parent="."]
 use_collision = true
@@ -89,5 +89,6 @@ size = Vector3(3, 0.7, 3)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.88326, -0.462755, 0.0755666, 0.403697, -0.668548, 0.624557, -0.238497, 0.582152, 0.777315, 0, 5, 0)
+light_angular_distance = 3.0
 shadow_enabled = true
-directional_shadow_mode = 1
+directional_shadow_blend_splits = true

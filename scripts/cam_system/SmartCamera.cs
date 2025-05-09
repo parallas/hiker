@@ -15,9 +15,9 @@ public partial class SmartCamera : Camera3D
         ProcessPriority = 999999;
     }
 
-    public override void _Process(double delta)
+    public override void _PhysicsProcess(double delta)
     {
-        base._Process(delta);
+        base._PhysicsProcess(delta);
 
         if (!VirtualCameras.Any()) return;
 

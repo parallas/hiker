@@ -15,6 +15,8 @@ public partial class Terrain : Node3D
         set { _meshInstance3D = value; GenerateMesh(); }
     }
 
+    [Export] public CollisionShape3D CollisionShape3D;
+
     [Export]
     public Vector2I Size
     {
@@ -41,17 +43,9 @@ public partial class Terrain : Node3D
     private float _maxHeight = 50f;
     private Texture2D _heightmap;
 
-    private CollisionShape3D _collisionShape;
-
     public override void _Ready()
     {
         base._Ready();
-
-        if (_collisionShape is null)
-        {
-            _collisionShape = new CollisionShape3D();
-            AddChild(_collisionShape);
-        }
 
         GenerateMesh();
     }
@@ -116,11 +110,11 @@ public partial class Terrain : Node3D
 
         var surfaceTool = new SurfaceTool();
         surfaceTool.CreateFrom(mesh, 0);
-        surfaceTool.SetSmoothGroup(1);
         surfaceTool.GenerateNormals();
         mesh = surfaceTool.Commit();
         MeshInstance3D.Mesh = mesh;
 
-        _collisionShape.Shape = MeshInstance3D.Mesh.CreateTrimeshShape();
+        var triMesh = mesh.CreateTrimeshShape();
+        CollisionShape3D?.SetShape(triMesh);
     }
 }

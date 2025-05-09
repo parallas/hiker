@@ -78,6 +78,8 @@ public partial class Player : CharacterBody3D
             SnapDownToStairsCheck(Velocity);
         }
 
+        moveAndSlideCollided &= IsOnWall();
+
         var isOnFloor = IsOnFloor() || _snappedToStairsLastFrame;
 
         float targetMoveSpeed = 3f;

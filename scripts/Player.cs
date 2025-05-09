@@ -70,9 +70,11 @@ public partial class Player : CharacterBody3D
     {
         base._PhysicsProcess(delta);
 
+        bool moveAndSlideCollided = false;
+
         if (!SnapUpToStairsCheck(Velocity, delta))
         {
-            MoveAndSlide();
+            moveAndSlideCollided = MoveAndSlide();
             SnapDownToStairsCheck(Velocity);
         }
 
@@ -98,6 +100,10 @@ public partial class Player : CharacterBody3D
         Velocity = planarVelocity + verticalVelocity;
 
         HikerCamera.TargetPosition = GlobalPosition + Vector3.Up * 1.45f;
+        if(!moveAndSlideCollided)
+        {
+            HikerCamera.TargetPosition += planarVelocity * 0.05f;
+        }
     }
 
     private void HandleFloorSteepness(double delta)

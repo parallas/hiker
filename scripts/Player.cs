@@ -58,7 +58,7 @@ public partial class Player : CharacterBody3D
             "move_right",
             "move_forward",
             "move_backward"
-        ).Clamp(-1f, 1f).Normalized();
+        ).Clamp(-1f, 1f);
 
         if(Input.IsActionJustPressed("jump"))
         {

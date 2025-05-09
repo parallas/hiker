@@ -9,6 +9,7 @@ public partial class Main : Node
         // GetViewport().SetScaling3DMode(Viewport.Scaling3DModeEnum.Bilinear);
         // GetViewport().SetScaling3DScale(0.5f);
         Input.SetMouseMode(Input.MouseModeEnum.Captured);
+        Engine.MaxFps = 120;
     }
 
     public override void _Process(double delta)

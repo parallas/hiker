@@ -54,9 +54,15 @@ disabled = true
 
 [node name="CSGCylinder3D" type="CSGCylinder3D" parent="CharacterBody3D"]
 process_mode = 4
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.774029, 0)
 radius = 0.25
-height = 1.6
+height = 1.54806
+sides = 16
+cone = true
+
+[node name="CSGSphere3D" type="CSGSphere3D" parent="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35402, 0)
+radius = 0.25
 
 [node name="CSGCombiner3D" type="CSGCombiner3D" parent="."]
 use_collision = true

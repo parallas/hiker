@@ -417,4 +417,29 @@ public static class MathUtil
     {
         return new Vector2I((int)vector.X, (int)vector.Y);
     }
+
+    public static float ResponseCurveSine(float x)
+    {
+        const float halfPi = MathF.PI / 2.0f;
+        return Math.Sign(x) * (-MathF.Sin(halfPi * x + halfPi) + 1.0f);
+    }
+
+    public static double ResponseCurveSine(double x)
+    {
+        const double halfPi = Math.PI / 2.0;
+        return Math.Sign(x) * (-Math.Sin(halfPi * x + halfPi) + 1.0);
+    }
+
+    // broken for unknown reason
+    public static float ResponseCurveTan(float x)
+    {
+        const float quarterPi = MathF.PI / 4.0f;
+        return MathF.Pow(MathF.Tan(quarterPi * x), 1.4f);
+    }
+
+    public static double ResponseCurveTan(double x)
+    {
+        const double quarterPi = MathF.PI / 4.0;
+        return Math.Pow(Math.Tan(quarterPi * x), 1.4);
+    }
 }

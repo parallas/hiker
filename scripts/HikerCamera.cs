@@ -54,9 +54,14 @@ public partial class HikerCamera : VirtualCamera
             "+look_yaw",
             "-look_pitch",
             "+look_pitch"
+        ).Clamp(-1, 1);
+
+        Vector2 inputDirWeighted = new(
+            MathUtil.ResponseCurveSine(inputDir.X),
+            MathUtil.ResponseCurveSine(inputDir.Y)
         );
 
-        _rotationValues += inputDir * (float)delta * 80f;
+        _rotationValues += inputDirWeighted * (float)delta * 80f;
     }
 
     private void UpdateRotation()

@@ -6,6 +6,9 @@ namespace Hiker;
 
 public partial class Player : CharacterBody3D
 {
+    [Export]
+    public Node3D ModelRoot { get; set; }
+
     public const float MaxStepHeight = 0.7f;
     public const float JumpHeight = 0.6f;
 
@@ -28,6 +31,7 @@ public partial class Player : CharacterBody3D
     private float _jumpVel;
     private Vector3 _motionVel;
     private Vector2 _inputDir;
+    private Vector2 _targetDirection;
 
     private double _steepTimer = 3;
 
@@ -37,6 +41,8 @@ public partial class Player : CharacterBody3D
     private float _maxStepAngle = 45;
     private bool _snappedToStairsLastFrame = false;
     private ulong _lastFrameWasOnFloor = ulong.MinValue;
+
+    #region Godot Events
 
     public override void _Ready()
     {
@@ -91,7 +97,7 @@ public partial class Player : CharacterBody3D
         if(isOnFloor)
         {
             _lastFrameWasOnFloor = Engine.GetPhysicsFrames();
-            HandleFloorSteepness(delta);
+            UpdateSteepness(delta);
             HandleJumpInput(ref verticalVelocity);
         }
 
@@ -101,14 +107,29 @@ public partial class Player : CharacterBody3D
 
         Velocity = planarVelocity + verticalVelocity;
 
-        HikerCamera.TargetPosition = GlobalPosition + Vector3.Up * 1.45f;
-        if(!moveAndSlideCollided)
-        {
-            HikerCamera.TargetPosition += planarVelocity * 0.05f;
-        }
+        UpdatePlayerRotation(targetPlanarVel, delta);
+        UpdateHikerCam(moveAndSlideCollided, planarVelocity);
     }
 
-    private void HandleFloorSteepness(double delta)
+    #endregion
+
+    #region Input Handling
+
+    private void HandleJumpInput(ref Vector3  verticalVelocity)
+    {
+        if(_jumpInput)
+        {
+            verticalVelocity = Vector3.Up * _jumpVel;
+            _steepTimer = 0;
+        }
+        _jumpInput = false;
+    }
+
+    #endregion
+
+    #region Basic Updating
+
+    private void UpdateSteepness(double delta)
     {
         var degAngle = Mathf.RadToDeg(GetFloorAngle());
         var floorSteepnessFactor = MathUtil.InverseLerp01(_maxSteepAngle, _minSteepAngle, degAngle);
@@ -128,20 +149,28 @@ public partial class Player : CharacterBody3D
         FloorMaxAngle = Mathf.DegToRad(_maxSteepAngle);
     }
 
-    private void HandleJumpInput(ref Vector3  verticalVelocity)
+    private void UpdateHikerCam(bool moveAndSlideCollided, Vector3 planarVelocity)
     {
-        if(_jumpInput)
+        HikerCamera.TargetPosition = GlobalPosition + Vector3.Up * 1.45f;
+        if(!moveAndSlideCollided)
         {
-            verticalVelocity = Vector3.Up * _jumpVel;
-            _steepTimer = 0;
+            HikerCamera.TargetPosition += planarVelocity * 0.05f;
         }
-        _jumpInput = false;
     }
 
-    private bool IsSurfaceTooSteep(Vector3 normal, float? customAngle = null)
+    private void UpdatePlayerRotation(Vector3 cameraRelativeInput, double delta)
     {
-        return normal.AngleTo(UpDirection) > (customAngle ?? FloorMaxAngle);
+        if (cameraRelativeInput.LengthSquared() > 0)
+            _targetDirection = cameraRelativeInput.ToVector2(true);
+        var targetRotation = Quaternion.FromEuler(
+            UpDirection * (-_targetDirection.Angle() + Mathf.Pi * 0.5f)
+        );
+        Quaternion = MathUtil.ExpDecay(Quaternion, targetRotation, 10f, (float)delta);
     }
+
+    #endregion
+
+    #region Stairs Handling
 
     private void SnapDownToStairsCheck(Vector3 currentVelocity)
     {
@@ -215,6 +244,10 @@ public partial class Player : CharacterBody3D
         return true;
     }
 
+    #endregion
+
+    #region Physics Testing
+
     private bool TestMove(Transform3D from, Vector3 motion, out PhysicsTestMotionResult3D result)
     {
         result = new PhysicsTestMotionResult3D();
@@ -235,4 +268,15 @@ public partial class Player : CharacterBody3D
 
     private bool CheckHitBelow(Vector3 startPos, float distance, out Godot.Collections.Dictionary result) =>
         CheckHit(startPos, startPos - UpDirection * distance, out result);
+
+    #endregion
+
+    #region Helper Functions
+
+    private bool IsSurfaceTooSteep(Vector3 normal, float? customAngle = null)
+    {
+        return normal.AngleTo(UpDirection) > (customAngle ?? FloorMaxAngle);
+    }
+
+    #endregion
 }

@@ -138,6 +138,7 @@ public partial class Terrain : Node3D
         var surfaceTool = new SurfaceTool();
         surfaceTool.SetSmoothGroup(0);
         surfaceTool.AppendFrom(mesh, 0, Transform3D.Identity);
+        surfaceTool.Index();
         surfaceTool.GenerateNormals();
         surfaceTool.GenerateTangents();
         mesh = surfaceTool.Commit(mesh);

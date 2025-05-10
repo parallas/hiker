@@ -1,19 +1,13 @@
-[gd_scene load_steps=5 format=3 uid="uid://c2jwuetrboci0"]
+[gd_scene load_steps=4 format=3 uid="uid://c2jwuetrboci0"]
 
 [ext_resource type="Script" uid="uid://b0ex226bdtyea" path="res://scripts/Player.cs" id="1_5o4a1"]
+[ext_resource type="PackedScene" uid="uid://b0mkfy64ryo8l" path="res://models/hiker.glb" id="2_mm30l"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1lur1"]
 radius = 0.25
 height = 1.6
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_1lur1"]
-size = Vector3(0.5, 1.6, 0.5)
-
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_1lur1"]
-height = 1.6
-radius = 0.25
-
-[node name="CharacterBody3D" type="CharacterBody3D" node_paths=PackedStringArray("Collider", "HikerCamera")]
+[node name="CharacterBody3D" type="CharacterBody3D" node_paths=PackedStringArray("Collider")]
 disable_mode = 1
 collision_layer = 5
 collision_mask = 3
@@ -22,30 +16,9 @@ script = ExtResource("1_5o4a1")
 Collider = NodePath("Capsule")
 GravitySpeed = -20.0
 TerminalVelocity = 40.0
-HikerCamera = NodePath("")
 
 [node name="Capsule" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
 shape = SubResource("CapsuleShape3D_1lur1")
 
-[node name="Box" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
-shape = SubResource("BoxShape3D_1lur1")
-disabled = true
-
-[node name="Cylinder" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
-shape = SubResource("CylinderShape3D_1lur1")
-disabled = true
-
-[node name="CSGCylinder3D" type="CSGCylinder3D" parent="."]
-process_mode = 4
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.774029, 0)
-radius = 0.25
-height = 1.54806
-sides = 16
-cone = true
-
-[node name="CSGSphere3D" type="CSGSphere3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35402, 0)
-radius = 0.25
+[node name="hiker" parent="." instance=ExtResource("2_mm30l")]

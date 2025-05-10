@@ -90,6 +90,7 @@ public partial class Terrain : Node3D
         List<int> indices = [];
 
         var heightmapImage = Heightmap?.GetImage();
+        heightmapImage?.Resize((int)(Size * 2f), (int)(Size * 2f), Image.Interpolation.Lanczos);
         heightmapImage?.Convert(Image.Format.Rf);
 
         for (int x = 0; x < HeightmapResolution; x++)

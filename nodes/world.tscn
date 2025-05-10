@@ -93,7 +93,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0243893, -9.01039, -0.00232
 script = ExtResource("4_vwthc")
 MeshInstance3D = NodePath("MeshInstance3D")
 CollisionShape3D = NodePath("CollisionShape3D")
-HeightmapResolution = 150
+HeightmapResolution = 256
 Size = 300
 MaxHeight = 15.0
 Heightmap = ExtResource("5_drgaw")
@@ -102,7 +102,7 @@ Heightmap = ExtResource("5_drgaw")
 skeleton = NodePath("../..")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D"]
-transform = Transform3D(0.584795, 0, 0, 0, 1, 0, 0, 0, 0.584795, 150, 0, 150)
+transform = Transform3D(0.5, 0, 0, 0, 1, 0, 0, 0, 0.5, 150, 0, 150)
 
 [node name="OmniLight3D" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29.5427, -10.1036, 25.5902)

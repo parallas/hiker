@@ -16,10 +16,17 @@ public partial class Terrain : Node3D
         set { _meshInstance3D = value; GenerateMesh(); }
     }
 
-    [Export] public CollisionShape3D CollisionShape3D;
+    [Export] public CollisionShape3D CollisionShape3D { get; set; }
 
     [Export]
-    public Vector2I Size
+    public int HeightmapResolution
+    {
+        get => _heightmapResolution;
+        set { _heightmapResolution = value; GenerateMesh(); }
+    }
+
+    [Export]
+    public int Size
     {
         get => _size;
         set { _size = value; GenerateMesh(); }
@@ -40,7 +47,8 @@ public partial class Terrain : Node3D
     }
 
     private MeshInstance3D _meshInstance3D;
-    private Vector2I _size = new Vector2I(100, 100);
+    private int _size = 100;
+    private int _heightmapResolution = 100;
     private float _maxHeight = 50f;
     private Texture2D _heightmap;
 
@@ -51,9 +59,26 @@ public partial class Terrain : Node3D
         GenerateMesh();
     }
 
+    public override void _Notification(int what)
+    {
+        base._Notification(what);
+
+        switch ((long)what)
+        {
+            case NotificationEditorPreSave:
+                MeshInstance3D?.SetMesh(null);
+                CollisionShape3D?.SetShape(null);
+                break;
+            case NotificationEditorPostSave:
+                GenerateMesh();
+                break;
+        }
+    }
+
     private void GenerateMesh()
     {
         if (MeshInstance3D is null) return;
+        if (CollisionShape3D is null) return;
         var mesh = new ArrayMesh();
 
         Godot.Collections.Array surfaceArray = [];
@@ -65,37 +90,38 @@ public partial class Terrain : Node3D
         List<int> indices = [];
 
         var heightmapImage = Heightmap?.GetImage();
+        heightmapImage?.Convert(Image.Format.Rf);
 
-        for (int x = 0; x < Size.X; x++)
-        for (int y = 0; y < Size.Y; y++)
+        for (int x = 0; x < HeightmapResolution; x++)
+        for (int y = 0; y < HeightmapResolution; y++)
         {
-            float u = (float)x / (Size.X - 1);
-            float v = (float)y / (Size.Y - 1);
+            float u = (float)x / (HeightmapResolution - 1);
+            float v = (float)y / (HeightmapResolution - 1);
             float height = heightmapImage?.GetPixel(
-                MathUtil.FloorToInt(heightmapImage.GetWidth() * ((float)x / Size.X)),
-                MathUtil.FloorToInt(heightmapImage.GetHeight() * ((float)y / Size.Y))
-            ).Luminance ?? 0;
+                MathUtil.FloorToInt(heightmapImage.GetWidth() * ((float)x / HeightmapResolution)),
+                MathUtil.FloorToInt(heightmapImage.GetHeight() * ((float)y / HeightmapResolution))
+            ).R ?? 0;
             var vert = new Vector3(
-                x,
+                u * Size,
                 height * MaxHeight,
-                y
+                v * Size
             );
             verts.Add(vert);
             normals.Add(Vector3.Up);
             uvs.Add(new Vector2(u, v));
         }
 
-        for (int y = 0; y < (Size.X - 1); y++)
-        for (int x = 0; x < (Size.Y - 1); x++)
+        for (int y = 0; y < (HeightmapResolution - 1); y++)
+        for (int x = 0; x < (HeightmapResolution - 1); x++)
         {
-            int quad = y * Size.X + x;
+            int quad = y * HeightmapResolution + x;
 
             indices.Add(quad);
-            indices.Add(quad + Size.X);
-            indices.Add(quad + Size.X + 1);
+            indices.Add(quad + HeightmapResolution);
+            indices.Add(quad + HeightmapResolution + 1);
 
             indices.Add(quad);
-            indices.Add(quad + Size.X + 1);
+            indices.Add(quad + HeightmapResolution + 1);
             indices.Add(quad + 1);
         }
 
@@ -117,7 +143,19 @@ public partial class Terrain : Node3D
         mesh = surfaceTool.Commit(mesh);
         MeshInstance3D.Mesh = mesh;
 
-        var triMesh = mesh.CreateTrimeshShape();
-        CollisionShape3D?.SetShape(triMesh);
+        CollisionShape3D.Position = new Vector3(Size * 0.5f, 0f, Size * 0.5f);
+        var terrainCollider = new HeightMapShape3D();
+        if (heightmapImage is not null)
+        {
+            terrainCollider.UpdateMapDataFromImage(heightmapImage, 0f, MaxHeight);
+            CollisionShape3D.SetScale(
+                new Vector3(
+                    (float)Size / heightmapImage.GetWidth(),
+                    1f,
+                    (float)Size / heightmapImage.GetHeight()
+                )
+            );
+        }
+        CollisionShape3D.SetShape(terrainCollider);
     }
 }

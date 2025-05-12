@@ -16,5 +16,5 @@ void fragment() {
 void light() {
     DIFFUSE_LIGHT += clamp(
 		smoothstep(0.48, 0.52, dot(NORMAL, LIGHT)), 0.0, 1.0
-	) * ATTENUATION * LIGHT_COLOR / PI;	
+	) * ATTENUATION * LIGHT_COLOR / PI;
 }

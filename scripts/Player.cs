@@ -103,7 +103,8 @@ public partial class Player : CharacterBody3D
 
         Vector3 targetPlanarVel = targetMoveSpeed * new Vector3(_inputDir.X, 0, _inputDir.Y);
         targetPlanarVel = targetPlanarVel.Rotated(UpDirection, _mainCamera.GlobalRotation.Y);
-        planarVelocity = MathUtil.ExpDecay(planarVelocity, targetPlanarVel, 10f, (float)delta);
+        float inDirFactor = Mathf.Max(0f, targetPlanarVel.Normalized().Dot(Basis.Z));
+        planarVelocity = MathUtil.ExpDecay(planarVelocity, targetPlanarVel * inDirFactor, 10f, (float)delta);
 
         Velocity = planarVelocity + verticalVelocity;
 
@@ -161,11 +162,11 @@ public partial class Player : CharacterBody3D
     private void UpdatePlayerRotation(Vector3 cameraRelativeInput, double delta)
     {
         if (cameraRelativeInput.LengthSquared() > 0)
-            _targetDirection = cameraRelativeInput.ToVector2(true);
+            _targetDirection = cameraRelativeInput.Normalized().ToVector2(true);
         var targetRotation = Quaternion.FromEuler(
             UpDirection * (-_targetDirection.Angle() + Mathf.Pi * 0.5f)
         );
-        Quaternion = MathUtil.ExpDecay(Quaternion, targetRotation, 10f, (float)delta);
+        Quaternion = MathUtil.ExpDecay(Quaternion, targetRotation, 13f, (float)delta);
     }
 
     #endregion

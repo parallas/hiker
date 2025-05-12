@@ -403,9 +403,14 @@ public static class MathUtil
         return (ushort)((first << 8) | (second & 0xff));
     }
 
-    public static Vector3 ToVector3(this Vector2I vector, bool yTangent = false, float tangent = 0f)
+    public static Vector3 ToVector3(this Vector2 vector, bool yTangent = false, float tangent = 0f)
     {
         return yTangent ? new Vector3(vector.X, tangent, vector.Y) : new Vector3(vector.X, vector.Y, tangent);
+    }
+
+    public static Vector3 ToVector3(this Vector2I vector, bool yTangent = false, float tangent = 0f)
+    {
+        return ToVector3(vector.ToVector2(), yTangent, tangent);
     }
 
     public static Vector2 ToVector2(this Vector2I vector)

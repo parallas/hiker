@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://b0mkfy64ryo8l" path="res://models/hiker.glb" id="2_mm30l"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1lur1"]
-radius = 0.25
+radius = 0.2
 height = 1.6
 
 [node name="hiker" type="CharacterBody3D" node_paths=PackedStringArray("ModelRoot", "Collider")]

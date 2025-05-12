@@ -7,6 +7,13 @@
 [ext_resource type="Texture2D" uid="uid://ccolwxbgqqt10" path="res://heightmaps/sample_heightmap.png" id="5_drgaw"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_drgaw"]
+sky_top_color = Color(0.151713, 0.461333, 0.934173, 1)
+sky_horizon_color = Color(0.288705, 0.626498, 0.999503, 1)
+sky_curve = 0.6
+ground_bottom_color = Color(0.288705, 0.626498, 0.999503, 1)
+ground_horizon_color = Color(0.288705, 0.626498, 0.999503, 1)
+sun_angle_max = 3.0
+sun_curve = 1.86607
 
 [sub_resource type="Sky" id="Sky_4dcx6"]
 sky_material = SubResource("ProceduralSkyMaterial_drgaw")
@@ -14,19 +21,24 @@ sky_material = SubResource("ProceduralSkyMaterial_drgaw")
 [sub_resource type="Environment" id="Environment_drgaw"]
 background_mode = 2
 sky = SubResource("Sky_4dcx6")
+ambient_light_sky_contribution = 0.8
+tonemap_exposure = 0.75
+glow_enabled = true
+glow_bloom = 0.1
+glow_hdr_threshold = 0.5
 fog_enabled = true
-fog_mode = 1
 fog_light_energy = 0.72
 fog_sun_scatter = 0.2
-fog_density = 1.0
-fog_depth_curve = 0.120743
-fog_depth_begin = 0.0
+fog_aerial_perspective = 0.698
+fog_depth_begin = 1.0
 fog_depth_end = 105.3
 volumetric_fog_density = 0.0848
 volumetric_fog_albedo = Color(0.517647, 0.552941, 0.607843, 1)
 volumetric_fog_emission = Color(0.0923971, 0.0923971, 0.0923971, 1)
 volumetric_fog_length = 90.71
 volumetric_fog_ambient_inject = 1.21
+adjustment_enabled = true
+adjustment_saturation = 1.1
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1lur1"]
 
@@ -45,7 +57,7 @@ transform = Transform3D(1, 0, 0, 0, 0.880519, 0.474011, 0, -0.474011, 0.880519, 
 script = ExtResource("3_vwthc")
 
 [node name="hiker" parent="." node_paths=PackedStringArray("HikerCamera") instance=ExtResource("3_1lur1")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.010253, 1.8, 0.000672102)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.76918, 1.8, 0.486721)
 HikerCamera = NodePath("../VCam")
 
 [node name="CSGCombiner3D" type="CSGCombiner3D" parent="."]
@@ -84,6 +96,8 @@ size = Vector3(0.296753, 8.8916, 1)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.88326, -0.462754, 0.0755664, 0.403697, -0.668548, 0.624557, -0.238497, 0.582152, 0.777315, 0, 5, 0)
+light_color = Color(0.970982, 0.987175, 1, 1)
+light_energy = 2.0
 shadow_enabled = true
 shadow_blur = 1.5
 directional_shadow_blend_splits = true
@@ -103,7 +117,9 @@ skeleton = NodePath("../..")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D"]
 transform = Transform3D(0.5, 0, 0, 0, 1, 0, 0, 0, 0.5, 150, 0, 150)
+visible = false
 
 [node name="OmniLight3D" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29.5427, -10.1036, 25.5902)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29.5427, 8.39225, 25.5902)
 light_energy = 1.5
+light_volumetric_fog_energy = 16.0

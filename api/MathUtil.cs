@@ -452,4 +452,48 @@ public static class MathUtil
         const double quarterPi = MathF.PI / 4.0;
         return Math.Pow(Math.Tan(quarterPi * x), 1.4);
     }
+
+    // Source: http://allenchou.net/2015/04/game-math-precise-control-over-numeric-springing/
+    public static void Spring(ref float current, ref float velocity, float target, float dampingRatio, float frequency, float deltaTime)
+    {
+        float f = 1.0f + 2.0f * deltaTime * dampingRatio * frequency;
+        float oo = frequency * frequency;
+        float hoo = deltaTime * oo;
+        float hhoo = deltaTime * hoo;
+        float detInv = 1.0f / (f + hhoo);
+        float detX = f * current + deltaTime * velocity + hhoo * target;
+        float detV = velocity + hoo * (target - current);
+        current = detX * detInv;
+        velocity = detV * detInv;
+    }
+
+    public static void Spring(ref Vector2 current, ref Vector2 velocity, Vector2 target, float dampingRatio, float frequency, float deltaTime)
+    {
+        var currentX = current.X;
+        var currentY = current.Y;
+        var velX = velocity.X;
+        var velY = velocity.Y;
+        Spring(ref currentX, ref velX, target.X, dampingRatio, frequency, deltaTime);
+        Spring(ref currentY, ref velY, target.Y, dampingRatio, frequency, deltaTime);
+        current = new Vector2(currentX, currentY);
+        velocity = new Vector2(velX, velY);
+    }
+
+    public static void Spring(ref Vector3 current, ref Vector3 velocity, Vector3 target, float dampingRatio,
+        float frequency, float deltaTime)
+    {
+        var currentX = current.X;
+        var currentY = current.Y;
+        var currentZ = current.Z;
+        var velX = velocity.X;
+        var velY = velocity.Y;
+        var velZ = velocity.Z;
+        Spring(ref currentX, ref velX, target.X, dampingRatio, frequency, deltaTime);
+        Spring(ref currentY, ref velY, target.Y, dampingRatio, frequency, deltaTime);
+        Spring(ref currentZ, ref velZ, target.Z, dampingRatio, frequency, deltaTime);
+        current = new Vector3(currentX, currentY, currentZ);
+        velocity = new Vector3(velocity.X, velocity.Y, velocity.Z);
+    }
+
+
 }

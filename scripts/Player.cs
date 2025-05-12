@@ -6,11 +6,14 @@ namespace Hiker;
 
 public partial class Player : CharacterBody3D
 {
+    public const float MaxStepHeight = 0.7f;
+    public const float JumpHeight = 0.6f;
+
     [Export]
     public Node3D ModelRoot { get; set; }
 
-    public const float MaxStepHeight = 0.7f;
-    public const float JumpHeight = 0.6f;
+    [Export]
+    Skeleton3D Skeleton { get; set; }
 
     [Export]
     public CollisionShape3D Collider { get; set; }
@@ -42,6 +45,9 @@ public partial class Player : CharacterBody3D
     private bool _snappedToStairsLastFrame = false;
     private ulong _lastFrameWasOnFloor = ulong.MinValue;
 
+    private float _backpackBasePos = 0;
+    private float _backpackJiggle = 0;
+
     #region Godot Events
 
     public override void _Ready()
@@ -53,6 +59,12 @@ public partial class Player : CharacterBody3D
         _mainCamera = GetViewport().GetCamera3D();
 
         _maxSteepAngle = Mathf.RadToDeg(FloorMaxAngle);
+
+        if (Skeleton.FindBone("backpack") is var backpackBone)
+        {
+            Vector3 bonePos = Skeleton.GetBonePosePosition(backpackBone);
+            _backpackBasePos = bonePos.Y;
+        }
     }
 
     public override void _Process(double delta)
@@ -69,6 +81,18 @@ public partial class Player : CharacterBody3D
         if(Input.IsActionJustPressed("jump"))
         {
             _jumpInput = true;
+        }
+
+        _backpackJiggle = MathUtil.ExpDecay(_backpackJiggle, 0f, 8f, (float)delta);
+        float verticalSpeed = MathUtil.Project(Velocity, UpDirection).Dot(UpDirection);
+        _backpackJiggle += -verticalSpeed * (float)delta * 0.25f;
+        _backpackJiggle = Mathf.Clamp(_backpackJiggle, -0.05f, 0.1f);
+
+        if (Skeleton.FindBone("backpack") is var backpackBone)
+        {
+            Vector3 bonePos = Skeleton.GetBonePosePosition(backpackBone);
+            bonePos.Y = _backpackBasePos + _backpackJiggle;
+            Skeleton.SetBonePosePosition(backpackBone, bonePos);
         }
     }
 

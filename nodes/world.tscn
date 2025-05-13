@@ -98,7 +98,7 @@ size = Vector3(0.296753, 8.8916, 1)
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.88326, -0.462754, 0.0755664, 0.403697, -0.668548, 0.624557, -0.238497, 0.582152, 0.777315, 0, 5, 0)
 light_color = Color(0.970982, 0.987175, 1, 1)
-light_energy = 2.0
+light_energy = 1.5
 shadow_enabled = true
 shadow_blur = 1.5
 directional_shadow_blend_splits = true

@@ -34,7 +34,31 @@ animation/import_rest_as_RESET=false
 import_script/path=""
 _subresources={
 "materials": {
+"Backpack": {
+"use_external/enabled": true,
+"use_external/path": "uid://h2uy44pgvpfe"
+},
+"Boots": {
+"use_external/enabled": true,
+"use_external/path": "uid://h2uy44pgvpfe"
+},
+"Face": {
+"use_external/enabled": true,
+"use_external/path": "uid://h2uy44pgvpfe"
+},
+"Gloves": {
+"use_external/enabled": true,
+"use_external/path": "uid://h2uy44pgvpfe"
+},
+"Jacket": {
+"use_external/enabled": true,
+"use_external/path": "uid://h2uy44pgvpfe"
+},
 "Material": {
+"use_external/enabled": true,
+"use_external/path": "uid://h2uy44pgvpfe"
+},
+"Scarf": {
 "use_external/enabled": true,
 "use_external/path": "uid://h2uy44pgvpfe"
 }

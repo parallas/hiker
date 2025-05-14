@@ -65,6 +65,21 @@ public partial class Player : CharacterBody3D
             Vector3 bonePos = Skeleton.GetBonePosePosition(backpackBone);
             _backpackBasePos = bonePos.Y;
         }
+
+        if (ModelRoot.FindChild("Hands") is MeshInstance3D meshHands)
+            meshHands.SetInstanceShaderParameter("tint", Colors.Red);
+        if (ModelRoot.FindChild("Shoes") is MeshInstance3D meshShoes)
+            meshShoes.SetInstanceShaderParameter("tint", Colors.Chocolate);
+        if (ModelRoot.FindChild("Scarf") is MeshInstance3D meshScarf)
+            meshScarf.SetInstanceShaderParameter("tint", Colors.Maroon);
+        if (ModelRoot.FindChild("Shirt") is MeshInstance3D meshShirt)
+            meshShirt.SetInstanceShaderParameter("tint", Colors.SlateBlue);
+        if (ModelRoot.FindChild("Hood", true) is MeshInstance3D meshHood)
+            meshHood.SetInstanceShaderParameter("tint", Colors.SlateBlue);
+        if (ModelRoot.FindChild("Backpack", true) is MeshInstance3D meshBackpack)
+            meshBackpack.SetInstanceShaderParameter("tint", Colors.DarkSlateBlue);
+        if (ModelRoot.FindChild("Face", true) is MeshInstance3D meshFace)
+            meshFace.SetInstanceShaderParameter("tint", Colors.PeachPuff);
     }
 
     public override void _Process(double delta)
